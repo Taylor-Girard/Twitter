@@ -60,4 +60,15 @@
         android:layout_toEndOf="@+id/ivProfileImage"
         android:textStyle="bold"
         tools:text="Taylor Girard" />
+
+    <TextView
+        android:id="@+id/tvTimePosted"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="0dp"
+        android:layout_toEndOf="@+id/tvScreenName"
+        android:textStyle="italic"
+        tools:text="5d" />
 </RelativeLayout>
