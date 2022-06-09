@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/miActionProgress"
+        android:orderInCategory="1"
+        android:title="Loading..."
+        app:actionLayout="@layout/action_view_progress"
+        app:showAsAction="always"
+        tools:visibility="visible" />
     <item
         android:id="@+id/compose"
         android:icon="@android:drawable/ic_menu_edit"
+        android:orderInCategory="2"
         android:title="Compose"
         app:showAsAction="always" />
+
+
 </menu>
