@@ -46,13 +46,15 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src="/.SimpleTweetDemo.gif" title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src="./SimpleTweetDemo.gif" title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [Kap](https://getkap.co/).
 
 ## Notes
 
-Describe any challenges encountered while building the app.
+Blockers:
+* Refresh brought up an empty screen, which ended up being an issue with a parameter variable being called rather than a member variable
+* Endless scrolling network call not getting new Tweets. ID value was being stored as an integer rather than a long, causing overflow.
 
 ## Open-source libraries used
 
