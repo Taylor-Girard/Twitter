@@ -56,7 +56,7 @@ public class ComposeActivity extends AppCompatActivity {
 
                 }
                 //Toast.makeText(ComposeActivity.this, tweetContent, Toast.LENGTH_LONG).show();
-                // Make an API call to Twitter to public the tweet
+                // Make an API call to Twitter to publish the tweet
                 client.publishTweet(tweetContent, new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Headers headers, JSON json) {
@@ -64,6 +64,7 @@ public class ComposeActivity extends AppCompatActivity {
                         try {
                             Tweet tweet = Tweet.fromJson(json.jsonObject);
                             Log.i(TAG, "Published tweet says" + tweet.body);
+                            Log.i(TAG, "Published tweet URL" + tweet.mediaUrl);
                             Intent intent = new Intent();
                             intent.putExtra("tweet", Parcels.wrap(tweet));
                             // set result code and bundle data for response

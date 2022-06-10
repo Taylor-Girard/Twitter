@@ -94,9 +94,11 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             tvName.setText(tweet.user.name);
             tvTimePosted.setText(tweet.timePosted);
             Glide.with(context).load(tweet.user.profileImageUrl).into(ivProfileImage);
-            if (tweet.mediaUrl.length() > 0){
+            if (tweet.mediaUrl.length() > 0 ){
                 Glide.with(context).load(tweet.mediaUrl).into(ivMedia);
                ivMedia.setVisibility(View.VISIBLE);
+            } else{
+                ivMedia.setVisibility(View.GONE);
             }
 
         }

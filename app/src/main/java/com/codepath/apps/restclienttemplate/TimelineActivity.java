@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
@@ -212,7 +213,6 @@ public class TimelineActivity extends AppCompatActivity {
                 Log.e(TAG, "onFailure! " + response, throwable);
             }
         });
-
     }
 
     public void loadNextDataFromApi(long offset) {
