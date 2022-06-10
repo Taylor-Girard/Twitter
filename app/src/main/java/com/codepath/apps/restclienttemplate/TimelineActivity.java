@@ -40,6 +40,8 @@ public class TimelineActivity extends AppCompatActivity {
     TweetsAdapter adapter;
     Button bLogout;
     MenuItem miActionProgressItem;
+    private EndlessRecyclerViewScrollListener scrollListener;
+    long maxId;
 
 
     private SwipeRefreshLayout swipeContainer;
@@ -69,6 +71,17 @@ public class TimelineActivity extends AppCompatActivity {
 
         populateHomeTimeline();
 
+        scrollListener = new EndlessRecyclerViewScrollListener((LinearLayoutManager) rvTweets.getLayoutManager()) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
+                loadNextDataFromApi(maxId);
+            }
+        };
+
+        rvTweets.addOnScrollListener(scrollListener);
+
         // Lookup the swipe container view
         swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
         // Setup refresh listener which triggers new data loading
@@ -94,7 +107,7 @@ public class TimelineActivity extends AppCompatActivity {
         // Send the network request to fetch the updated data
         // `client` here is an instance of Android Async HTTP
         // getHomeTimeline is an example endpoint.
-        client.getHomeTimeline(new JsonHttpResponseHandler() {
+        client.getHomeTimeline(0, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
                 JSONArray jsonArray = json.jsonArray;
@@ -178,7 +191,7 @@ public class TimelineActivity extends AppCompatActivity {
 
     private void populateHomeTimeline() {
 
-        client.getHomeTimeline(new JsonHttpResponseHandler() {
+        client.getHomeTimeline(0, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
                 Log.i(TAG, "onSuccess! " + json.toString());
@@ -186,6 +199,7 @@ public class TimelineActivity extends AppCompatActivity {
                 try {
                     tweets.addAll(Tweet.fromJsonArray(jsonArray));
                     adapter.notifyDataSetChanged();
+                    maxId = tweets.get(tweets.size() - 1).ID;
                     hideProgressBar();
                 } catch (JSONException e) {
                     Log.e(TAG, "Json exception", e);
@@ -199,6 +213,36 @@ public class TimelineActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void loadNextDataFromApi(long offset) {
+        // Send an API request to retrieve appropriate paginated data
+        //  --> Send the request including an offset value (i.e `page`) as a query parameter.
+        Log.d(TAG, "loadNextDataFromApi: "+ offset);
+        client.getHomeTimeline(offset, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                Log.i(TAG, "onSuccess! " + json.toString());
+                JSONArray jsonArray = json.jsonArray;
+                try {
+                    tweets.addAll(Tweet.fromJsonArray(jsonArray));
+                    adapter.notifyDataSetChanged();
+                    maxId = tweets.get(tweets.size() - 1).ID;
+                    Log.i("maxId", String.valueOf(maxId));
+                } catch (JSONException e) {
+                    Log.e(TAG, "Json exception", e);
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                Log.e(TAG, "onFailure! " + response, throwable);
+            }
+        });
+        //  --> Deserialize and construct new model objects from the API response
+        //  --> Append the new data objects to the existing set of items inside the array of items
+        //  --> Notify the adapter of the new items made with `notifyItemRangeInserted()`
     }
 
     private View.OnClickListener logoutListener = new View.OnClickListener() {
